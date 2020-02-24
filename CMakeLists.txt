@@ -40,7 +40,7 @@ if(NOT KINESIS_VIDEO_OPEN_SOURCE_SRC)
   if(DEFINED ENV{KINESIS_VIDEO_OPEN_SOURCE_SRC})
     set(KINESIS_VIDEO_OPEN_SOURCE_SRC $ENV{KINESIS_VIDEO_OPEN_SOURCE_SRC})
   elseif(BUILD_DEPENDENCIES)
-    set(KINESIS_VIDEO_OPEN_SOURCE_SRC ${CMAKE_SOURCE_DIR}/open-source/local)
+    set(KINESIS_VIDEO_OPEN_SOURCE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/open-source/local)
   else()
     set(KINESIS_VIDEO_OPEN_SOURCE_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/open-source/downloads/local"
@@ -49,17 +49,19 @@ if(NOT KINESIS_VIDEO_OPEN_SOURCE_SRC)
 endif()
 
 if(BUILD_DEPENDENCIES)
-  set(OPEN_SOURCE_DIR ${CMAKE_SOURCE_DIR}/open-source)
+  if(NOT OPEN_SOURCE_DIR)
+    set(OPEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/open-source)
+  endif()
 
   if(NOT EXISTS ${OPEN_SOURCE_DIR})
     file(MAKE_DIRECTORY ${OPEN_SOURCE_DIR}/local)
   endif()
 
-  set(OPEN_SRC_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/open-source/local)
+  set(OPEN_SRC_INSTALL_PREFIX ${OPEN_SOURCE_DIR}/local)
 
   if(NOT EXISTS ${OPEN_SOURCE_DIR}/libgtest)
     # build gtest
-    configure_file(${CMAKE_SOURCE_DIR}/cmake-scripts/libgtest-CMakeLists.txt
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake-scripts/libgtest-CMakeLists.txt
                    ${OPEN_SOURCE_DIR}/libgtest/CMakeLists.txt COPYONLY)
     execute_process(
       COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} .
